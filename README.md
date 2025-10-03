@@ -6,7 +6,7 @@ Currently available workflow:
 - **AIMD (Ab Initio Molecular Dynamics)**
   - Molecular Dynamics (MD) supported
 
-See full documentation: [https://mads2.github.io/AIMS-Factory/](https://pierilab.github.io/AIMS-Factory/)
+See full documentation: [https://mads2.github.io/AIMS-Factory/](https://mads-2.github.io/AIMS-Factory/)
 
 <p align="center">
 <pre>                                                 

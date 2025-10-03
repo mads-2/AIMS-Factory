@@ -1,5 +1,5 @@
 site_name: AIMS-Factory
-repo_url: https://github.com/YOURUSERNAME/AIMS-Factory
+repo_url: https://github.com/mads-2/AIMS-Factory
 
 nav:
   - Home: index.md

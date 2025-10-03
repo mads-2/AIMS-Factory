@@ -3,15 +3,25 @@ name: Deploy MkDocs site
 on:
   push:
     branches:
-      - main  # or whatever your default branch is
+      - main
+
+permissions:
+  contents: write 
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-      - run: pip install mkdocs mkdocs-material
-      - run: mkdocs gh-deploy --force
+      - name: Install dependencies
+        run: pip install mkdocs mkdocs-material
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force --remote-name origin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

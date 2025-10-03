@@ -8,7 +8,8 @@ Currently available workflow:
 
 See full documentation: [https://pierilab.github.io/AIMS-Factory/](https://pierilab.github.io/AIMS-Factory/)
 
-<p align="center">                                                 
+<p align="center">
+<pre>                                                 
   ⠀⠀⠀⠀⠀⠀⠀  ⠀⣀⠀⡀    ⠀⡠⢂⠬⠀⠚⠁
 ⠀⠀⠀⠀⠀⠀⠀⡠⢂⠬⠀⠚⠁     ⡠⡠
 ⠀ __⠀⠀⠀⡠⡠⠀ ⠀⠀⠀    ||   ___                        
@@ -18,4 +19,5 @@ See full documentation: [https://pierilab.github.io/AIMS-Factory/](https://pieri
  |""| |"""|  |"| |""| |"""| |""|      
  "'''"''"'""'"""''"''''"""'""'""
     WELCOME TO AIMS-FACTORY
+<pre>
 </p> 

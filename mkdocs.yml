@@ -1,0 +1,11 @@
+site_name: AIMS-Factory
+repo_url: https://github.com/YOURUSERNAME/AIMS-Factory
+
+nav:
+  - Home: index.md
+  - Workflows:
+      - AIMD:
+          - Overview: workflows/aimd/overview.md
+          - Molecular Dynamics (MD): workflows/aimd/md.md
+          - Optimization (Opt): workflows/aimd/opt.md
+

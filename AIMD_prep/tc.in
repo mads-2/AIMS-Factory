@@ -1,0 +1,17 @@
+coordinates                     coords.xyz
+velocities                      vels.xyz
+basis                           # add your basis set here (ex. 6-31gs) *also please keep the names for coordinates & velocities!
+charge                          # add the charge of your molecule here
+spinmult                        # add your spin mult here (default = 1 = singlet)
+method                          # add your method (ex. wb97x)
+precision                       mixed
+maxit                           10000
+dftd                            no
+purify                          no
+run                             md
+nstep                           2000 # 1 ps run (can adjust this line and the one below to change time length of run)
+timestep                        0.5
+thermostat                      langevin
+lnvtime                         100
+
+#lnvtime is dampening for thermostat - non rescale: langevin, bp

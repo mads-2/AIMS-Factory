@@ -25,7 +25,6 @@ This workflow turns AIMS spawns into **regular MD trajectories**, enabling you t
    .../<molecule>/AIMD/AIMS/
    ```
 
-   ⚠️ **Important**: This copy must be recursive (all contents, not just the folders). Copying can take a long time—consider writing a copy script and submitting it to the cluster instead of running on your local machine.
 
 4. Use the helper script (`aimd_aims_copy.sh`) to automate copying. It will:
    - Create `AIMD/`

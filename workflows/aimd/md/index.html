@@ -79,7 +79,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="https://github.com/YOURUSERNAME/AIMS-Factory/edit/master/docs/workflows/aimd/md.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
+                                <a href="https://github.com/mads-2/AIMS-Factory/edit/master/docs/workflows/aimd/md.md" class="nav-link"><i class="fa-brands fa-github"></i> Edit on GitHub</a>
                             </li>
                     </ul>
                 </div>
@@ -105,11 +105,23 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#setup-instructions" class="nav-link">Setup Instructions</a>
+            <li class="nav-item" data-bs-level="2"><a href="#pre-steps-preparing-aims-data" class="nav-link">Pre-Steps: Preparing AIMS Data</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#monitoring-runs" class="nav-link">Monitoring Runs</a>
+            <li class="nav-item" data-bs-level="2"><a href="#part-a-aimd_prep" class="nav-link">Part A: AIMD_prep</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#part-b-setting-up-core-aimd-scripts" class="nav-link">Part B: Setting Up Core AIMD Scripts</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#part-c-accessory-scripts" class="nav-link">Part C: Accessory Scripts</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#monitoring-and-error-handling" class="nav-link">Monitoring and Error Handling</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -126,59 +138,116 @@
 
 <h1 id="molecular-dynamics-md">Molecular Dynamics (MD)</h1>
 <h2 id="what-is-aimd">What is AIMD?</h2>
-<p>AIMD allows you to continue nuclear motion after AIMS spawning events. Each spawn point can be extended into a physically meaningful MD trajectory on the lower electronic state.</p>
+<p>AIMD (Ab Initio Molecular Dynamics) allows you to continue nuclear motion after AIMS spawning events. Each spawn point can be extended into a physically meaningful MD trajectory on the lower electronic state.</p>
+<p>This workflow turns AIMS spawns into <strong>regular MD trajectories</strong>, enabling you to simulate how nuclear motion evolves after a system moves from the upper state to the lower electronic state.</p>
 <hr />
-<h2 id="setup-instructions">Setup Instructions</h2>
+<h2 id="pre-steps-preparing-aims-data">Pre-Steps: Preparing AIMS Data</h2>
 <ol>
-<li><strong>Prepare directories</strong></li>
-<li>Navigate to your molecule’s AIMS directory:
-     <code>.../&lt;molecule&gt;/AIMS/####</code></li>
-<li>Create an AIMD folder:
-     <code>.../&lt;molecule&gt;/AIMD/</code></li>
 <li>
-<p>Copy finished AIMS runs (e.g. 0000/, 0001/, 0002/) into:
-     <code>.../&lt;molecule&gt;/AIMD/AIMS/</code></p>
+<p>AIMD is only run on <strong>finished AIMS runs</strong>. Your AIMS setup typically looks like:
+   <code>.../&lt;molecule&gt;/AIMS/####</code></p>
 </li>
 <li>
-<p><strong>AIMD_prep</strong></p>
-</li>
-<li>Create <code>AIMD_prep/</code> under <code>.../&lt;molecule&gt;/AIMD/</code>.</li>
-<li>
-<p>Inside, create:</p>
-<ul>
-<li><code>submit.sh</code> → SLURM submission script (edit to fit your cluster).</li>
-<li><code>tc.in</code> → TeraChem MD input file.</li>
-</ul>
+<p>Make a new directory for AIMD:
+   <code>.../&lt;molecule&gt;/AIMD/</code></p>
 </li>
 <li>
-<p><strong>Core Scripts</strong>
-   Place these in <code>.../&lt;molecule&gt;/AIMD/</code>:</p>
+<p>Copy your finished AIMS runs (e.g., <code>0000/</code>, <code>0001/</code>, <code>0002/</code>) into:
+   <code>.../&lt;molecule&gt;/AIMD/AIMS/</code></p>
 </li>
-<li><code>AIMS_summary.sh</code> → generates <code>AIMS_summary.txt</code> of AIMS/AIMD status.</li>
-<li><code>AIMD_gen_list.sh</code> → generates <code>AIMD_preplist.txt</code>.</li>
-<li><code>AIMD_execute.sh</code> → prepares and submits jobs for AIMD trajectories.</li>
-</ol>
-<p>Workflow:
-<code>./AIMS_summary.sh</code>
-<code>./AIMD_gen_list.sh</code>
-<code>./AIMD_execute.sh</code></p>
-<ol>
-<li><strong>Accessory Scripts</strong></li>
-<li><code>spawn_check_AIMD.sh</code> → monitors progress; logs to <code>info_spawn_check_AIMD.txt</code>.</li>
-<li><code>create_restart_md.sh</code> → creates restart directories (<code>r1/, r2/, ...</code>) for failed runs.</li>
-<li><code>run_restart_md.sh</code> → submits all pending restart jobs.</li>
+<li>
+<p>Use the helper script (<code>aimd_aims_copy.sh</code>) to automate copying. It will:</p>
+</li>
+<li>Create <code>AIMD/</code></li>
+<li>Make an empty <code>AIMD/AIMS/</code> directory</li>
+<li>Copy selected <code>####/</code> directories into <code>AIMD/AIMS/####/</code></li>
 </ol>
 <hr />
-<h2 id="monitoring-runs">Monitoring Runs</h2>
+<h2 id="part-a-aimd_prep">Part A: AIMD_prep</h2>
+<ol>
+<li>
+<p>Inside <code>.../&lt;molecule&gt;/AIMD/</code>, create a folder:
+   <code>AIMD_prep/</code></p>
+</li>
+<li>
+<p>Inside <code>AIMD_prep/</code>, add:</p>
+</li>
+<li><code>submit.sh</code> → your SLURM submission file (adjust for your cluster: partition, GPU, memory, etc)</li>
+<li><code>tc.in</code> → the TeraChem MD input file</li>
+</ol>
+<p>These provide the template for all AIMD runs.</p>
+<hr />
+<h2 id="part-b-setting-up-core-aimd-scripts">Part B: Setting Up Core AIMD Scripts</h2>
+<p>Place these scripts in your <code>.../&lt;molecule&gt;/AIMD/</code> directory:</p>
 <ul>
-<li><strong>done</strong> → <code>tc.out</code> exists with completion markers.</li>
-<li><strong>running</strong> → <code>tc.out</code> exists, files are updating.</li>
-<li><strong>error</strong> → <code>tc.out</code> has error markers or is stale.</li>
+<li>
+<p><strong><code>AIMS_summary.sh</code></strong><br />
+  Summarizes which AIMS runs are finished and whether AIMD jobs have been set up.</p>
+</li>
+<li>
+<p><strong><code>AIMD_gen_list.sh</code></strong><br />
+  Reads the summary and creates a list (<code>AIMD_preplist.txt</code>) of which initial conditions are ready to continue into AIMD.</p>
+</li>
+<li>
+<p><strong><code>AIMD_execute.sh</code></strong><br />
+  Uses the preplist to:</p>
+</li>
+<li>Create AIMD directories under each finished AIMS run  </li>
+<li>Copy <code>tc.in</code> and <code>submit.sh</code> from <code>AIMD_prep/</code>  </li>
+<li>Generate <code>coords.xyz</code> and <code>vels.xyz</code> for each spawn point  </li>
+<li>Submit jobs with <code>sbatch</code></li>
 </ul>
+<h3 id="workflow-order">Workflow order</h3>
+<p>Run the following in sequence:</p>
+<pre><code>./AIMS_summary.sh
+./AIMD_gen_list.sh
+./AIMD_execute.sh
+</code></pre>
+<hr />
+<h2 id="part-c-accessory-scripts">Part C: Accessory Scripts</h2>
+<p>These additional scripts help with monitoring and restarting AIMD runs:</p>
+<ul>
+<li><strong><code>spawn_check_AIMD.sh</code></strong><br />
+  Logs the status of all AIMD runs.  </li>
+<li>Output: <code>info_spawn_check_AIMD.txt</code> (user-readable summary)  </li>
+<li>Output: <code>error_paths_base.txt</code> and <code>error_paths_restart.txt</code> (lists of failed runs)  </li>
+</ul>
+<p>Status categories:<br />
+  - <strong>done</strong> → run finished successfully (<code>tc.out</code> has completion markers)<br />
+  - <strong>running</strong> → run in progress (<code>tc.out</code> updating)<br />
+  - <strong>ERROR</strong> → run failed or stalled  </p>
+<ul>
+<li><strong><code>create_restart_md.sh</code></strong><br />
+  Uses the error path files to create new restart directories (<code>r1/</code>, <code>r2/</code>, …) with the required restart files.  </li>
+<li>
+<p>Output: <code>info_create_restart_md.txt</code>  </p>
+</li>
+<li>
+<p><strong><code>run_restart_md.sh</code></strong><br />
+  Searches for restart directories containing <code>tc.in</code> but no <code>tc.out</code>.<br />
+  Prints a list and asks for confirmation before submitting jobs with <code>sbatch</code>.</p>
+</li>
+</ul>
+<hr />
+<h2 id="monitoring-and-error-handling">Monitoring and Error Handling</h2>
+<ol>
+<li>
+<p>To monitor AIMD progress:
+   <code>./spawn_check_AIMD.sh</code>
+   This gives you a detailed status report of all spawns.</p>
+</li>
+<li>
+<p>To handle errors:</p>
+</li>
+<li>Run <code>create_restart_md.sh</code> to make new restart directories.  </li>
+<li>Run <code>run_restart_md.sh</code> to launch the restart jobs.</li>
+</ol>
 <hr />
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Copying many runs can be slow — use a script (<code>aimd_aims_copy.sh</code>) and submit it to a supercomputer rather than your personal machine.</li>
+<li>Copying AIMS directories can be slow — always prefer batch copy scripts.  </li>
+<li>AIMD currently supports <strong>MD runs only</strong>.  </li>
+<li><strong>Optimization workflows</strong> (continuing from the end of trajectories) are planned but not yet implemented.</li>
 </ul></div>
             </div>
         </div>
